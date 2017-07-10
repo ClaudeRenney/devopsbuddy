@@ -1,2 +1,2 @@
 com/devopsbuddy/DevopsbuddyApplication.class
-com/devopsbuddy/controllers/HelloWorldController.class
+com/devopsbuddy/web/controllers/IndexController.class
