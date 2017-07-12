@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 @WebAppConfiguration
 public class DevopsbuddyApplicationTest  {
 
-    @Autowired
+   @Autowired
     private I18NService i18NService;
 
     @Test

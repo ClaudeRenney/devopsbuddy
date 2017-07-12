@@ -21,6 +21,7 @@ private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(I18NService.
     private MessageSource messageSource;
 
     public String getMessage(String messageId) {
+        LOG.info("Returning i18n text for messageId {}", messageId);
         Locale locale = LocaleContextHolder.getLocale();
         return getMessage(messageId, locale);
     }
