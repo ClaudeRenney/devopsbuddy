@@ -17,6 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DevopsbuddyApplication.class)
 @WebAppConfiguration
+
 public class DevopsbuddyApplicationTest  {
 
    @Autowired

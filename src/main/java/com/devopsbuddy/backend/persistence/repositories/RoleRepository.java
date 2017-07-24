@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * Created by Claude on 7/14/17.
  */
 @Repository
-public interface RoleRepository extends CrudRepository<Role, Integer > {
+public interface RoleRepository extends CrudRepository<Role, Integer> {
 }
