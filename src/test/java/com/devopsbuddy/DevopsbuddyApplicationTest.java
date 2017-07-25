@@ -1,6 +1,6 @@
 package com.devopsbuddy;
 
-import com.devopsbuddy.web.i18n.I18NService;
+import com.devopsbuddy.backend.services.I18NService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Claude on 7/10/17.

@@ -2,6 +2,7 @@ package com.devopsbuddy.backend.services;
 
 import com.devopsbuddy.web.domain.frontend.FeedbackPojo;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Claude on 7/12/17.
