@@ -1,9 +1,6 @@
 package com.devopsbuddy.test.integration;
 
-import com.devopsbuddy.backend.persistence.domain.backend.Plan;
-import com.devopsbuddy.backend.persistence.domain.backend.Role;
-import com.devopsbuddy.backend.persistence.domain.backend.User;
-import com.devopsbuddy.backend.persistence.domain.backend.UserRole;
+import com.devopsbuddy.backend.persistence.domain.backend.*;
 import com.devopsbuddy.backend.persistence.repositories.PasswordResetTokenRepository;
 import com.devopsbuddy.backend.persistence.repositories.PlanRepository;
 import com.devopsbuddy.backend.persistence.repositories.RoleRepository;
@@ -11,9 +8,12 @@ import com.devopsbuddy.backend.persistence.repositories.UserRepository;
 import com.devopsbuddy.enums.PlansEnum;
 import com.devopsbuddy.enums.RolesEnum;
 import com.devopsbuddy.utils.UserUtils;
+import org.junit.Assert;
 import org.junit.rules.TestName;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +21,9 @@ import java.util.Set;
  * Created by Claude on 7/25/17.
  */
 public abstract class AbstractIntegrationTest {
+
+    @Value("${token.expiration.length.minutes}")
+    private int expirationTimeInMinutes;
     @Autowired
     protected PlanRepository planRepository;
     @Autowired
@@ -62,5 +65,13 @@ public abstract class AbstractIntegrationTest {
         return createUser(testName.getMethodName(),testName.getMethodName() + "@devopsbuddy.com");
     }
 
+    private PasswordResetToken createPasswordResetToken(String token, User user, LocalDateTime now) {
 
+
+        PasswordResetToken passwordResetToken = new PasswordResetToken(token, user, now, expirationTimeInMinutes);
+        passwordResetTokenRepository.save(passwordResetToken);
+        Assert.assertNotNull(passwordResetToken.getId());
+        return passwordResetToken;
+
+    }
 }

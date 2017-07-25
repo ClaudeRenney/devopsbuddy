@@ -121,13 +121,13 @@ public class PasswordResetTokenIntegrationTest extends AbstractIntegrationTest {
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
 
         String token1 = UUID.randomUUID().toString();
-        //String token2 = UUID.randomUUID().toString();
-        //String token3 = UUID.randomUUID().toString();
+       // String token2 = UUID.randomUUID().toString();
+       // String token3 = UUID.randomUUID().toString();
 
         Set<PasswordResetToken> tokens = new HashSet<>();
         tokens.add(createPasswordResetToken(token1, user, now));
-       // tokens.add(createPasswordResetToken(token2, user, now));
-        //tokens.add(createPasswordResetToken(token3, user, now));
+       //tokens.add(createPasswordResetToken(token2, user, now));
+       // tokens.add(createPasswordResetToken(token3, user, now));
 
         passwordResetTokenRepository.save(tokens);
 
