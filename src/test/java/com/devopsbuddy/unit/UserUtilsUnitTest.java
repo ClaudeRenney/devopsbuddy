@@ -1,11 +1,15 @@
 package com.devopsbuddy.unit;
 
+import com.devopsbuddy.backend.persistence.domain.backend.User;
 import com.devopsbuddy.utils.UserUtils;
 import com.devopsbuddy.web.controllers.ForgotMyPasswordController;
+import com.devopsbuddy.web.domain.frontend.BasicAccountPayload;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.util.UUID;
 
@@ -16,12 +20,12 @@ public class UserUtilsUnitTest {
 
     private MockHttpServletRequest mockHttpServletRequest;
 
-    // private PodamFactory podamFactory;
+    private PodamFactory podamFactory;
 
     @Before
     public void init() {
         mockHttpServletRequest = new MockHttpServletRequest();
-
+        podamFactory= new PodamFactoryImpl();
     }
 
     @Test
@@ -40,9 +44,9 @@ public class UserUtilsUnitTest {
         Assert.assertEquals(expectedUrl, actualUrl);
 
     }
-}
 
-   /** @Test
+
+   @Test
     public void mapWebUserToDomainUser() {
 
         BasicAccountPayload webUser = podamFactory.manufacturePojoWithFullData(BasicAccountPayload.class);
@@ -62,4 +66,3 @@ public class UserUtilsUnitTest {
 
     }
 }
-    */
