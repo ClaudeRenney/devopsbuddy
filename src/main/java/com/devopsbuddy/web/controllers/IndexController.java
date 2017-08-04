@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class IndexController {
-    @RequestMapping("/")
+    private static final String HOME_VIEW_NAME = "index";
+    @RequestMapping("")
     public String home(){
-        return "index";
+        return HOME_VIEW_NAME;
     }
 }

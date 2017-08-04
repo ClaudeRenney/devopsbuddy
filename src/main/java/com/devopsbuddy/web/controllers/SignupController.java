@@ -1,13 +1,16 @@
 package com.devopsbuddy.web.controllers;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.devopsbuddy.backend.persistence.domain.backend.Plan;
 import com.devopsbuddy.backend.persistence.domain.backend.User;
 import com.devopsbuddy.backend.persistence.domain.backend.UserRole;
 import com.devopsbuddy.backend.persistence.domain.backend.Role;
 import com.devopsbuddy.backend.services.PlanService;
+import com.devopsbuddy.backend.services.S3Service;
 import com.devopsbuddy.backend.services.UserService;
 import com.devopsbuddy.enums.PlansEnum;
 import com.devopsbuddy.enums.RolesEnum;
+import com.devopsbuddy.exceptions.S3Exception;
 import com.devopsbuddy.utils.UserUtils;
 import com.devopsbuddy.web.domain.frontend.BasicAccountPayload;
 import com.devopsbuddy.web.domain.frontend.ProAccountPayload;
@@ -18,14 +21,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,13 +42,19 @@ import java.util.Set;
  * Created by Claude on 7/27/17.
  */
 @Controller
-public class    SignupController {
+public class SignupController {
 
     @Autowired
     private PlanService planService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private S3Service s3Service;
+
+    @Autowired
+    private AmazonS3Client s3Client;
 
    // @Autowired
    // private S3Service s3Service;
@@ -121,17 +134,18 @@ public class    SignupController {
         // plans and roles
         LOG.debug("Transforming user payload into User domain object");
         User user = UserUtils.fromWebUserToDomainUser(payload);
-        //Stores the profile image on Amazon S3 and stores the URL in the user's record
-        if(file != null && file.isEmpty()) {
 
-            String profileImageUrl = null;
-            if(profileImageUrl != null) {
+        // Stores the profile image on Amazon S3 and stores the URL in the user's record
+        if (file != null && !file.isEmpty()) {
+
+            String profileImageUrl = s3Service.storeProfileImage(file, payload.getUsername());
+            if (profileImageUrl != null) {
                 user.setProfileImageUrl(profileImageUrl);
-
             } else {
-                LOG.warn("There is a problem uploading the profile image to S3. The user's profile will" +
-                " be created without the image");
+                LOG.warn("There was a problem uploading the profile image to S3. The user's profile will" +
+                        " be created without the image");
             }
+
         }
 
 
@@ -197,6 +211,18 @@ public class    SignupController {
         model.addAttribute(SIGNED_UP_MESSAGE_KEY, "true");
 
         return SUBSCRIPTION_VIEW_NAME;
+    }
+    @ExceptionHandler({S3Exception.class})
+    public ModelAndView signupException(HttpServletRequest request, Exception exception) {
+
+        LOG.error("Request {} raised exception {}", request.getRequestURL(), exception);
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", exception);
+        mav.addObject("url", request.getRequestURL());
+        mav.addObject("timestamp", LocalDate.now(Clock.systemUTC()));
+        mav.setViewName(GENERIC_ERROR_VIEW_NAME);
+        return mav;
     }
 
 
